@@ -1,6 +1,7 @@
 
 var React = require('react');
 var createReactClass = require('create-react-class');
+
 var op = []; //array for storing numbers
 var decimal = true; // to access decimal dot
 module.exports = createReactClass({
@@ -75,11 +76,11 @@ module.exports = createReactClass({
     
     render: function(){
       return(
-        <div>
-          <div>
-            <div>
-      <form>
-      <div>
+        <div className='pad'>
+          <div className='afterpad'>
+            <div className='filter'>
+      <form className='calc'>
+      <div className='row'>
         <button onClick={this.reset} value={0}> C </button>
         <button onClick={this.delete}> DEL </button> 
         </div>

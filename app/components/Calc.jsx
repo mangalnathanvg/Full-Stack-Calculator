@@ -5,13 +5,16 @@ var Display = require('./../components/Display.jsx');
 var Nums = require('./../components/Nums.jsx');
 var Footer = require('./../components/Footer.jsx');
 
+
+
 module.exports = createReactClass({
    
     getInitialState: function(){
         return {
           display: 0,
           result: 0,
-          decimals: ".000"
+          decimals: ".000",
+          
         }
       },
     
@@ -30,6 +33,7 @@ module.exports = createReactClass({
         <Display display={display} />
           <Nums setResult={this.setResult}/>
           <Footer />
+        
           </div>
       )
     }
