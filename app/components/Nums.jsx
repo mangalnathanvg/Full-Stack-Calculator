@@ -1,9 +1,10 @@
 
 var React = require('react');
 var createReactClass = require('create-react-class');
-
 var op = []; //array for storing numbers
 var decimal = true; // to access decimal dot
+
+var request = require('superagent');
 module.exports = createReactClass({
    
     pusher: function (event) { //Will add the number to the display.
@@ -43,7 +44,21 @@ module.exports = createReactClass({
       
       var result = eval(op).toFixed(3);
       var ind = result.indexOf('.');
-      
+      var newItem = op+"="+result.toString();
+      var newItem = newItem.toString();
+      var data = newItem;
+      request
+        .post('/insertdata')
+        .send(data)
+        .end(function(err,res){
+          if(err||!res.ok){
+            console.log('Oh no! err');
+          } else {
+            console.log('Success');
+          }
+        });
+
+
       if (String(result).length <= 11) {
       this.props.setResult({result: result.slice(0,ind),
                            decimals: result.slice(ind)})
