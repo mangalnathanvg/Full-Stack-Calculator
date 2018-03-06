@@ -1,14 +1,83 @@
 var React = require('react');
 var createReactClass = require('create-react-class');
+var request = require('superagent');
 
 const contentStyle = {
-    color:'black'
+    color: 'black',
+    fontSize: '25px',
 }
-module.exports = createReactClass({
-    render:function(){
-        return (
-            <h1 style={contentStyle}>The character later appears in person when sending a messenger to boast his renewed intentions of conquering his universe before his aging adversary. In response, Doctor Strange travels to Dormammu's "Dark Dimension" as the Ancient One does not consider himself powerful enough to defeat Dormammu, and manages to overcome all supernatural servitors sent against him. Dormammu engages Strange in mystic combat and shows himself to be far more powerful, but, when drawing upon the realm's energies, inadvertently weakens the barrier containing the horde of Mindless Ones. Since they threatened Dormammu's subjects, Strange helped his enemy to re-seal the juggernauts by letting power from his amulet flow into Dormammu. Indebted to Strange for his help, Dormammu ends the fight, and in return Strange demands a binding vow to never enter the "Earth realm" again and to not harm Clea. Dormammu complies, but gains a burning hatred against Strange for the humiliation.</h1>
 
-             );
+const Button1Style = {
+    width: '100px',
+    background:'orange',
+    marginLeft:'70px',
+    padding:'2px',
+    zIndex:'1'
+  }
+
+  
+module.exports = createReactClass({
+    clear:function() {
+        request
+            .post('/removedata')
+            .end(function (err, res){
+                if (err || !res.ok) {
+                    console.log('Oh no! err');
+                }else{
+                    console.log("Successfully Cleared!");
+                    document.getElementById("demo").innerHTML="";
+                }
+            })
+            document.getElementById("demo").innerHTML="";
+    },
+    display: function () {
+
+        request
+            .post('/getdata')
+            .end(function (err, res) {
+                if (err || !res.ok) {
+                    console.log('Oh no! err');
+                } else {
+                    var arr = JSON.parse(res.text);
+                    var i;
+                    var newArr = []
+                    for (i = 0; i < arr.length; i++) {
+                        newArr[i] = arr[i].expression;
+                    }
+                    var exp = [];
+                    for(var i in newArr){
+                        var key = i;
+                        var val = newArr[i];
+                        for(var j in val){
+                            var sub_key = j;
+                            exp.push(sub_key);
+                        }
+
+                        }
+                    
+                    var displayItem = "<ul>";
+
+                    for(var i in exp){
+                        displayItem += "<li>" + exp[i] + " = " + eval(exp[i]).toFixed(3).toString() + "</li>";
+                    }
+                    
+                    displayItem += "</ul>";
+                    document.getElementById("demo").innerHTML = displayItem; 
+
+
+                }
+            });
+            setTimeout(this.display,2000);
+    },
+    render: function () {
+        return (
+            <div>
+                {this.display()}
+                <h2>History of Calculations</h2>
+                <div id="demo" style = {contentStyle}>
+                </div>
+                <button onClick={this.clear} style={Button1Style}>Clear</button>
+            </div>
+        );
     }
 });

@@ -1,10 +1,12 @@
 
 var React = require('react');
 var createReactClass = require('create-react-class');
+var qs = require('qs');
 var op = []; //array for storing numbers
 var decimal = true; // to access decimal dot
-
 var request = require('superagent');
+
+
 module.exports = createReactClass({
    
     pusher: function (event) { //Will add the number to the display.
@@ -18,10 +20,10 @@ module.exports = createReactClass({
       event.preventDefault();
       var num = event.target.value;
       var last = op.charAt(op.length-1);      
-         if ((last === "+") || (last === '*')|| (last ==='/') || (last ==='.')) { 
+         if ((last === '+') || (last === '*')|| (last ==='/') || (last ==='.')) { 
            //Do Nothing
          } else {
-           op += num;
+           op += String(num);
            decimal = true;
            this.props.setResult({display: op})
          }
@@ -43,22 +45,22 @@ module.exports = createReactClass({
       event.preventDefault();
       
       var result = eval(op).toFixed(3);
-      var ind = result.indexOf('.');
-      var newItem = op+"="+result.toString();
-      var newItem = newItem.toString();
-      var data = newItem;
+      var Item = op+"="+result.toString();
+
+      var newItem = Item.split("+").join("%2B");
+      
       request
         .post('/insertdata')
-        .send(data)
+        .send(newItem)
         .end(function(err,res){
           if(err||!res.ok){
             console.log('Oh no! err');
           } else {
-            console.log('Success');
+           console.log("Success!!");
           }
         });
 
-
+        var ind = result.indexOf('.');
       if (String(result).length <= 11) {
       this.props.setResult({result: result.slice(0,ind),
                            decimals: result.slice(ind)})
@@ -74,6 +76,7 @@ module.exports = createReactClass({
     
     delete: function(event){
       event.preventDefault();
+    
       var test = false; // to test if im next to delete a '.'
       op = op.slice(0,-1);
       this.props.setResult({display: op})

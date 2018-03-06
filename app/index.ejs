@@ -1,19 +1,27 @@
 
     <head>
         <title>Calculator</title>
+        <!-- Importing jQuery library for animation -->
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
             <script>
-                //Scripts for jQuery animations
+                /**
+                 * This function is used for jQuery animations.
+                 */
                 $(document).ready(function(){
+
+                    //Initially hide back button and log div tag.
                     $('.back').hide();
                     $('#log').hide();
+                    
+                    //Moves Calculator to the left and shows back button and log div. 
                     $('.history').click(function(){
                         $('#app').animate({left:'-350px'});
                         $('.back').show();
                         $('#log').delay(400).show(0);
                         $('.history').hide();
                     });
-
+                    
+                    //Moves Calculator to initial position and hiding the log div on clicking back button.
                     $('.back').click(function(){
                         $('#app').animate({left:'0px'});
                         $('.back').hide();
@@ -22,15 +30,17 @@
                     });
                 });
             </script>         
-
+            <!-- Style sheets for the application -->
             <link rel='stylesheet' href='styles.css'/>
        
     </head>
 <body>
-
+    <!-- Div tag where calculator will be rendered -->
     <div id="app"></div>
-
+    <!-- Div tag where History of calculation will be rendered -->
     <div id="log"></div>
+
+    <!-- Including the bundled script of all scripts present in app folder -->
     <script src='app.js'></script>
     
       

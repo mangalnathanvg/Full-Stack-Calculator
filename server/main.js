@@ -4,52 +4,77 @@ var app = new express();
 var parser = require('body-parser');
 
 var MongoClient = require('mongodb').MongoClient;
-var url ='mongodb://localhost:27017';
+var url = 'mongodb://localhost:27017';
 
-const dbName ="history";
+const dbName = "history";
 
-const insertDocuments = function(db, callback, item) {
+
+const insertDocuments = function (db, callback, item) {
     // Get the documents collection
     const collection = db.collection('historylog');
     // Insert some documents
     collection.insert(
-      item
-    , function(err, result) {
-      console.log("Inserted documents into the collection");
-      callback(result);
-    });
-  }
+        { expression: item }
+        , function (err, result) {
+            console.log("Inserted documents into the collection");
+            callback(result);
+        });
+}
 
-/* MongoClient.connect(url,function(err,client){
-    console.log("\n------------------------------\nConnected to Mongo Database!!\n------------------------------\n");
-    const db = client.db(dbName);
-
-    insertDocuments(db,function(){
-        client.close();
-    },"Mangal");
-});  */
 
 
 app.use(parser.json());
-app.use(parser.urlencoded({extended:true}));
+app.use(parser.urlencoded({ extended: true }));
+
 
 app.get('/', function (req, res) {
     res.render('./../app/index.ejs', {});
 })
-.post('/insertdata',function(req,res){
-    const newData = req.body;
-    MongoClient.connect(url,function(err,client){
+    .post('/insertdata', function (req, res) {
+        var newData = req.body;
+        console.log(newData);
+        MongoClient.connect(url, function (err, client) {
 
-        console.log("Connected!!!");
-        const db = client.db(dbName);
-        insertDocuments(db, function(){
-            client.close();
-        },newData);
+            console.log("Connected!!!");
+            const db = client.db(dbName);
+
+            insertDocuments(db, function () {
+                client.close();
+            }, newData);
+
+        });
+
+    })
+
+    .post('/getdata', function (req, res) {
+        MongoClient.connect(url, function (err, client) {
+            const db = client.db(dbName);
+
+            db.collection("historylog").find({}).toArray(function (err, result) {
+                if (err) throw err;
+                res.json(result);
+                client.close();
+            });
+
+            
+        })
+    })
+    .post('/removedata', function(req,res){
+        MongoClient.connect(url, function(err, client){
+            const db = client.db(dbName);
+            var query = {};
+            db.collection("historylog").remove(query, function(err,obj){
+                client.close();
+            });
+        });
     });
 
-});
+
+
+
 app.use(express.static(__dirname + '/../.tmp'))
 app.listen(7777);
+
 
 
 console.log("Magic happens at port number 7777");
