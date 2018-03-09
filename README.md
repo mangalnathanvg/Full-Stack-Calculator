@@ -7,7 +7,7 @@ A simple lightweight calculator application developed using React , Express and 
 1. Clone the repository by typing the following in the terminal.
 
    ```
-   git clone https://github.training.cerner.com/MV056700/ReactCalculator.git
+   git clone https://github.com/mangalnathanvg/Full-Stack-Calculator.git
    ```
 
 2. Install dependencies and packages using terminal. (Need node to do this.......)
